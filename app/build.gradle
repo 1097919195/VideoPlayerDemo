@@ -56,4 +56,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation project(':library:common')
     implementation project(':library:jcvideoplayer')
+    implementation 'com.liulishuo.filedownloader:library:1.7.4'
 }

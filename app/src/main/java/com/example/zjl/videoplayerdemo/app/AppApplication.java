@@ -7,6 +7,8 @@ import android.content.Context;
 import com.example.zjl.videoplayerdemo.BuildConfig;
 import com.jaydenxiao.common.baseapp.BaseApplication;
 import com.jaydenxiao.common.commonutils.LogUtils;
+import com.liulishuo.filedownloader.FileDownloader;
+
 
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -21,6 +23,7 @@ public class AppApplication extends BaseApplication {
         //初始化logger,注意拷贝的话BuildConfig.LOG_DEBUG一定要是在当前module下的包名，配置文件中判断测适和发行版本
         LogUtils.logInit(BuildConfig.LOG_DEBUG);
         setRxJavaErrorHandler();
+        FileDownloader.setup(this);//注意作者已经不建议使用init方法
     }
 
 //    /**

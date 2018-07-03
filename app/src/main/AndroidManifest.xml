@@ -2,6 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zjl.videoplayerdemo">
 
+    <uses-permission android:name="android.permission.INTERNET" />//允许访问网络
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>//查看当前网络状态
+    //存储
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />//震动设备
+
+    <uses-permission android:name="android.permission.CAMERA"/>//相机
+    <uses-feature android:name="android.hardware.camera"/>//使用照相机权限
+    <uses-feature android:name="android.hardware.camera.autofocus" />//自动聚焦权限
+
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>//闪光灯
+
+    <!-- 添加操作联系人的权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
     <application
         android:name=".app.AppApplication"
         android:allowBackup="true"

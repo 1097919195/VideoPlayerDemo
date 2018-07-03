@@ -5,17 +5,46 @@
     android:layout_height="match_parent"
     tools:context="com.example.zjl.videoplayerdemo.activity.MainActivity">
 
+
+    <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+        android:id="@+id/videoplayer"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"/>
     <TextView
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/videoplayer"
         android:id="@+id/text"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
-    <Button
-        android:id="@+id/request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:text="视频情况" />
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:text="请求"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取视频"/>
+        <Button
+            android:id="@+id/clear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="清除text内容"/>
+        <Button
+            android:id="@+id/download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下载该视频"/>
+        <Button
+            android:id="@+id/deleteVideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="删除该视频"/>
+    </LinearLayout>
+
 
 </RelativeLayout>
