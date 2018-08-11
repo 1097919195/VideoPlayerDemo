@@ -2,6 +2,7 @@ package com.example.zjl.videoplayerdemo.presenter;
 
 
 import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
+import com.example.zjl.videoplayerdemo.bean.Person;
 import com.example.zjl.videoplayerdemo.contract.LoginContract;
 import com.jaydenxiao.common.baserx.RxSubscriber2;
 
@@ -12,10 +13,10 @@ import com.jaydenxiao.common.baserx.RxSubscriber2;
 public class LoginPresenter extends LoginContract.Presenter {
     @Override
     public void getTokenRequset(String username, String password) {
-        mRxManage.add(mModel.getToken(username,password).subscribeWith(new RxSubscriber2<LoginTokenData>(mContext, true) {
+        mRxManage.add(mModel.getToken(username,password).subscribeWith(new RxSubscriber2<Person>(mContext, true) {
             @Override
-            protected void _onNext(LoginTokenData tokenData) {
-                mView.returnGetToken(tokenData);
+            protected void _onNext(Person person) {
+                mView.returnGetToken(person);
             }
 
             @Override

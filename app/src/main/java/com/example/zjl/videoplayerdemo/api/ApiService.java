@@ -4,6 +4,7 @@ package com.example.zjl.videoplayerdemo.api;
 
 
 import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
+import com.example.zjl.videoplayerdemo.bean.Person;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
 
@@ -127,7 +128,7 @@ public interface ApiService {
     //mock 登录
     @FormUrlEncoded
     @POST("api/login")
-    Observable<LoginTokenData> login(
+    Observable<Person> login(
             @Field("userName") String name,
             @Field("passWord") String pass
     );

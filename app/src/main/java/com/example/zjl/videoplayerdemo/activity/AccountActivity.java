@@ -1,6 +1,8 @@
 package com.example.zjl.videoplayerdemo.activity;
 
 import android.Manifest;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
@@ -13,7 +15,10 @@ import com.example.zjl.videoplayerdemo.R;
 import com.example.zjl.videoplayerdemo.app.AppApplication;
 import com.example.zjl.videoplayerdemo.app.AppConstant;
 import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
+import com.example.zjl.videoplayerdemo.bean.Person;
 import com.example.zjl.videoplayerdemo.contract.LoginContract;
+import com.example.zjl.videoplayerdemo.db.DBOperator;
+import com.example.zjl.videoplayerdemo.db.PersonDBHelper;
 import com.example.zjl.videoplayerdemo.model.LoginModel;
 import com.example.zjl.videoplayerdemo.presenter.LoginPresenter;
 import com.jaydenxiao.common.base.BaseActivity;
@@ -22,6 +27,8 @@ import com.jaydenxiao.common.commonutils.PermissionUtils;
 import com.jaydenxiao.common.commonutils.SPUtils;
 import com.jaydenxiao.common.commonutils.ToastUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -50,6 +57,8 @@ public class AccountActivity extends BaseActivity<LoginPresenter, LoginModel> im
     private static final int permissionCode = 1;
 
 
+    PersonDBHelper dbHelper;
+    DBOperator dbOperator;
     @Override
     public int getLayoutId() {
         return R.layout.act_account;
@@ -147,9 +156,33 @@ public class AccountActivity extends BaseActivity<LoginPresenter, LoginModel> im
     }
 
     @Override
-    public void returnGetToken(LoginTokenData tokenData) {
-        if (tokenData.getStatus()==200) {
+    public void returnGetToken(Person person) {
+        if (person.getStatus()==200) {
             ToastUtil.showShort("登录成功！");
+            dbHelper = new PersonDBHelper(this);
+            dbOperator = new DBOperator(this);
+
+            //first
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            String Query = "Select * from person where id =?";
+            Cursor cursor = db.rawQuery(Query,new String[]{"1097919195"});
+            if(cursor.getCount()>0)
+            {
+                cursor.close();
+                LogUtils.loge("该用户已经插入到数据表了"+cursor.getCount());
+            }else {
+                cursor.close();
+            }
+
+            //second
+            List<Person> peopleList = dbOperator.select("1097919195");
+            if (peopleList != null && peopleList.size() > 0) {
+                LogUtils.loge("该用户已经插入到数据表"+peopleList.size());
+            }else {
+                dbOperator.insert(person);
+            }
+
+
             finish();
             MainActivity.startAction(AccountActivity.this);
         }

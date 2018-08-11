@@ -5,6 +5,7 @@ import android.content.Context;
 
 
 import com.example.zjl.videoplayerdemo.BuildConfig;
+import com.facebook.stetho.Stetho;
 import com.jaydenxiao.common.baseapp.BaseApplication;
 import com.jaydenxiao.common.commonutils.LogUtils;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -24,6 +25,8 @@ public class AppApplication extends BaseApplication {
         LogUtils.logInit(BuildConfig.LOG_DEBUG);
         setRxJavaErrorHandler();
         FileDownloader.setup(this);//注意作者已经不建议使用init方法
+
+        Stetho.initializeWithDefaults(this);//浏览器抓包
     }
 
 //    /**

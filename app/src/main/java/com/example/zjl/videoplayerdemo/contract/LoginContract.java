@@ -1,6 +1,7 @@
 package com.example.zjl.videoplayerdemo.contract;
 
 import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
+import com.example.zjl.videoplayerdemo.bean.Person;
 import com.jaydenxiao.common.base.BaseModel;
 import com.jaydenxiao.common.base.BasePresenter;
 import com.jaydenxiao.common.base.BaseView;
@@ -14,11 +15,11 @@ import io.reactivex.Observable;
 
 public interface LoginContract {
     interface Model extends BaseModel {
-        Observable<LoginTokenData> getToken(String username, String password);
+        Observable<Person> getToken(String username, String password);
     }
 
     interface View extends BaseView {
-        void returnGetToken(LoginTokenData tokenData);
+        void returnGetToken(Person person);
     }
 
     abstract class Presenter extends BasePresenter<View, Model> {
