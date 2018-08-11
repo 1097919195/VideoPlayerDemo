@@ -1,5 +1,6 @@
 package com.example.zjl.videoplayerdemo.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -55,6 +56,12 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     private File outputImage;
     private Uri imageUri;
 
+
+    public static void startAction(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 
     @Override
     public int getLayoutId() {

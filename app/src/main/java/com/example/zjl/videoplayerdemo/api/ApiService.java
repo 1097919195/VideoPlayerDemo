@@ -3,6 +3,7 @@ package com.example.zjl.videoplayerdemo.api;
 
 
 
+import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
 
@@ -122,5 +123,13 @@ public interface ApiService {
             @Header("Cache-Control") String cacheControl,
             @Path("type") String type,
             @Path("startPage") int startPage);
+
+    //mock 登录
+    @FormUrlEncoded
+    @POST("api/login")
+    Observable<LoginTokenData> login(
+            @Field("userName") String name,
+            @Field("passWord") String pass
+    );
 
 }
