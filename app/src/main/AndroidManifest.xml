@@ -20,6 +20,25 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
+
+    <!--声明本应用 可允许通信的权限-->
+    <permission android:name="zjl.content.PROVIDER"
+        android:description="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:label="normal_label"
+        android:protectionLevel="normal" />
+    <!--细分读  写权限如下，但本Demo直接采用全权限-->
+    <permission android:name="zjl.content.PROVIDER.WRITE"
+        android:description="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:label="normal_label"
+        android:protectionLevel="normal"/>
+    <permission android:name="zjl.content.PROVIDER.READ"
+        android:description="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:label="normal_label"
+        android:protectionLevel="normal"/>
+
     <application
         android:name=".app.AppApplication"
         android:allowBackup="true"
@@ -40,6 +59,15 @@
         <activity android:name=".activity.MainActivity">
 
         </activity>
+
+        <provider
+            android:name=".contentprovider.BookProvider"
+            android:authorities="com.zjl.contentproviderdemo.BookProvider"
+            android:permission="zjl.content.PROVIDER"
+            android:readPermission="zjl.content.PROVIDER.READ"
+            android:writePermission="zjl.content.PROVIDER.WRITE"
+            android:exported="true"/>
+
     </application>
 
 </manifest>
