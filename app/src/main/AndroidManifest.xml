@@ -68,6 +68,15 @@
             android:writePermission="zjl.content.PROVIDER.WRITE"
             android:exported="true"/>
 
+        <service android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":aidl">
+            <intent-filter >
+                <action android:name="android.zjl.MyService" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

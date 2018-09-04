@@ -1,11 +1,15 @@
 package com.example.zjl.videoplayerdemo.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,12 +19,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.zjl.videoplayerdemo.ICallback;
+import com.example.zjl.videoplayerdemo.IRemoteService;
 import com.example.zjl.videoplayerdemo.R;
+import com.example.zjl.videoplayerdemo.bean.Entity;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
 import com.example.zjl.videoplayerdemo.contract.VideoContract;
 import com.example.zjl.videoplayerdemo.model.VideoModel;
 import com.example.zjl.videoplayerdemo.presenter.VideoPresenter;
+import com.example.zjl.videoplayerdemo.service.MyService;
 import com.jaydenxiao.common.base.BaseActivity;
 import com.jaydenxiao.common.base.BaseModel;
 import com.jaydenxiao.common.base.BasePresenter;
@@ -33,6 +41,7 @@ import com.liulishuo.filedownloader.util.FileDownloadUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
@@ -60,6 +69,75 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     private Uri imageUri;
 
 
+    //包装的一层
+//    private ICallback aidlService;
+//
+//    private IRemoteService interProcessCallback = new IRemoteService.Stub() {
+//        @Override
+//        public void doSomeThing(int anInt, String aString) throws RemoteException {
+//
+//        }
+//
+//        @Override
+//        public void addEntity(Entity entity) throws RemoteException {
+//
+//        }
+//
+//        @Override
+//        public List<Entity> getEntity() throws RemoteException {
+//            MainActivity.this.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+////                    tvRecvValue.setText(nVal+"");
+//                }
+//            });
+//            return null;
+//        }
+//
+//    };
+//
+//    private ServiceConnection conn = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service)
+//        {
+//            aidlService =  ICallback.Stub.asInterface(service);
+//            try {
+//                //设置回调对象
+//                aidlService.getReceive(interProcessCallback);
+//            } catch (RemoteException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        @Override
+//        public void onServiceDisconnected(ComponentName name)
+//        {
+//            aidlService = null;
+//        }
+//    };
+
+    //直接获取回调对象
+    private IRemoteService s;
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            //连接后拿到 Binder，转换成 AIDL，获得 aidl定义的接口持有类
+            s = IRemoteService.Stub.asInterface(service);
+            Log.e("AIDL的service已经更新", "onServiceConnected service Qi");
+            try {
+                //设置回调对象
+                List<Entity> entityList = s.getEntity();
+                Log.e("AIDL的service已经更新", String.valueOf(entityList.size()));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     public static void startAction(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);
@@ -81,6 +159,13 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         mPresenter.getVideoListDataRequest("V9LG4B3A0", 0);
         initFileStore();
         initListener();
+        initAIDL();
+    }
+
+    //接受返回过来的实体类即实现通用需要向连接绑定服务
+    private void initAIDL() {
+        Intent mIntent = new Intent("android.zjl.MyService");
+        bindService(mIntent, conn, BIND_AUTO_CREATE);
     }
 
     private void initFileStore() {
