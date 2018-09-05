@@ -164,7 +164,9 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
     //接受返回过来的实体类即实现通用需要向连接绑定服务
     private void initAIDL() {
-        Intent mIntent = new Intent("android.zjl.MyService");
+        Intent mIntent = new Intent();
+        mIntent.setAction("android.zjl.MyService");
+        mIntent.setPackage("com.example.zjl.videoplayerdemo");
         bindService(mIntent, conn, BIND_AUTO_CREATE);
     }
 
