@@ -7,6 +7,8 @@ import android.util.Log;
 import android.util.SparseArray;
 
 
+import com.example.zjl.videoplayerdemo.app.AppApplication;
+import com.example.zjl.videoplayerdemo.app.AppConstant;
 import com.example.zjl.videoplayerdemo.bean.HttpResponse;
 import com.example.zjl.videoplayerdemo.utils.exception.ApiException;
 import com.example.zjl.videoplayerdemo.utils.exception.TimeoutException;
@@ -14,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jaydenxiao.common.baseapp.BaseApplication;
 import com.jaydenxiao.common.commonutils.NetWorkUtils;
+import com.jaydenxiao.common.commonutils.SPUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,7 +92,7 @@ public class Api {
         HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                Log.i("okhttp",message);
+                Log.i("okhttp", message);
             }
         });
         logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);//BODY:请求/响应行 + 头 + 体
@@ -101,10 +104,12 @@ public class Api {
         Interceptor headerInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
+                String jwt = SPUtils.getSharedStringData(AppApplication.getAppContext(), AppConstant.LOGIN_TOKEN);
                 //将请求体设置给请求方法内
                 Request build = chain.request().newBuilder()
                         //使用 addHeader(name, value) 方法来为 HTTP 头添加新的值
                         .addHeader("Content-Type", "application/json")//Content-Type向接收方指示实体的介质类型，指定HEAD方法送到接收方的实体介质类型，或GET方法发送的请求介质类型
+                        .addHeader("userToken", jwt)
                         .build();
                 return chain.proceed(build);
             }
@@ -155,9 +160,10 @@ public class Api {
 
     /**
      * OkHttpClient
+     *
      * @return
      */
-    public static OkHttpClient getOkHttpClient(int hostType){
+    public static OkHttpClient getOkHttpClient(int hostType) {
         Api retrofitManager = sRetrofitManager.get(hostType);
         if (retrofitManager == null) {
             retrofitManager = new Api(hostType);
@@ -188,7 +194,7 @@ public class Api {
             //要是没有网络就去缓存里面取数据
             if (!NetWorkUtils.isNetConnected(BaseApplication.getAppContext())) {
                 request = request.newBuilder()
-                        .cacheControl(TextUtils.isEmpty(cacheControl)? CacheControl.FORCE_NETWORK:CacheControl.FORCE_CACHE)
+                        .cacheControl(TextUtils.isEmpty(cacheControl) ? CacheControl.FORCE_NETWORK : CacheControl.FORCE_CACHE)
                         .build();
             }
 
@@ -213,7 +219,7 @@ public class Api {
         }
     };
 
-    public static class HttpResponseFunc<T> implements Function<HttpResponse<T>, T>{
+    public static class HttpResponseFunc<T> implements Function<HttpResponse<T>, T> {
         @Override
         public T apply(HttpResponse<T> httpResponse) {
             //全局处理错误信息
@@ -221,9 +227,9 @@ public class Api {
             int status = httpResponse.getStatus();
             if (status >= EXCEPTION_THRESHOLD) {
                 if (status == CONNECT_TIME_OUT) {
-                    throw new TimeoutException(httpResponse.getMsg());
+                    throw new TimeoutException(httpResponse.getMessage());
                 } else {
-                    throw new ApiException(httpResponse.getMsg());
+                    throw new ApiException(httpResponse.getMessage());
                 }
             }
             if (httpResponse.getData() == null) {

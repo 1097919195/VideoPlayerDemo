@@ -32,6 +32,15 @@ public class Person {
     private boolean success;
     private String introduce;
     private String label;
+    private String loginToken;
+
+    public String getLoginToken() {
+        return loginToken;
+    }
+
+    public void setLoginToken(String loginToken) {
+        this.loginToken = loginToken;
+    }
 
     public String getName() {
         return name;

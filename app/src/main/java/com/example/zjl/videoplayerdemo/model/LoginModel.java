@@ -17,8 +17,9 @@ import io.reactivex.Observable;
 public class LoginModel implements LoginContract.Model{
     @Override
     public Observable<Person> getToken(String username, String password) {
-        return Api.getDefault(HostType.QUALITY_DATA_TEST)
+        return Api.getDefault(HostType.BOOT_DATA)
                 .login(username,password)
+                .map(new Api.HttpResponseFunc<>())
                 .compose(RxSchedulers.io_main());
     }
 }

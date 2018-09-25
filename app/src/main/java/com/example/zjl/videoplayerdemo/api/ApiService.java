@@ -3,6 +3,7 @@ package com.example.zjl.videoplayerdemo.api;
 
 
 
+import com.example.zjl.videoplayerdemo.bean.HttpResponse;
 import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
 import com.example.zjl.videoplayerdemo.bean.Person;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
@@ -12,11 +13,16 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -125,12 +131,33 @@ public interface ApiService {
             @Path("type") String type,
             @Path("startPage") int startPage);
 
-    //mock 登录
+//    //mock 登录
+//    @FormUrlEncoded
+//    @POST("api/login")
+//    Observable<Person> login(
+//            @Field("userName") String name,
+//            @Field("passWord") String pass
+//    );
+
+    //springboot 登录
     @FormUrlEncoded
-    @POST("api/login")
-    Observable<Person> login(
-            @Field("userName") String name,
-            @Field("passWord") String pass
+    @POST("user/login")
+    Observable<HttpResponse<Person>> login(
+            @Field("account") String name,
+            @Field("password") String pass
+    );
+
+    //上传
+    @Multipart
+    @POST("user/upload")
+    Observable<HttpResponse> uploadData(
+            @PartMap Map<String, RequestBody> map,
+            @Part MultipartBody.Part[] images
+    );
+
+    //下载
+    @GET("user/download")
+    Observable<HttpResponse> download(
     );
 
 }

@@ -43,7 +43,17 @@
             android:id="@+id/deleteVideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="删除该视频"/>
+            android:text="在本地删除该视频"/>
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="上传该视频到我的服务器"/>
+        <Button
+            android:id="@+id/download_from_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下载我的服务器中的文件"/>
     </LinearLayout>
 
 

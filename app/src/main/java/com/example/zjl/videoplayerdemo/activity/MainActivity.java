@@ -22,7 +22,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.zjl.videoplayerdemo.ICallback;
 import com.example.zjl.videoplayerdemo.IRemoteService;
 import com.example.zjl.videoplayerdemo.R;
+import com.example.zjl.videoplayerdemo.app.AppConstant;
 import com.example.zjl.videoplayerdemo.bean.Entity;
+import com.example.zjl.videoplayerdemo.bean.HttpResponse;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
 import com.example.zjl.videoplayerdemo.contract.VideoContract;
@@ -46,8 +48,12 @@ import java.util.List;
 import butterknife.BindView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import android.net.Uri;
+import android.widget.Toast;
 
 public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> implements VideoContract.View {
 
@@ -61,6 +67,8 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     Button download;
     @BindView(R.id.deleteVideo)
     Button deleteVideo;
+    @BindView(R.id.upload)
+    Button upload;
 
 
     public static final File PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);//获得外部存储器的第一层的文件对象
@@ -191,6 +199,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
             File[] files = storageFile.listFiles();
             if (files.length==0) {
                 ToastUtil.showShort("对应的视频文件夹下为空");
+                return;
             }
 
             for (File file : files) {
@@ -207,6 +216,71 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
             startDownLoad();
         });
+
+        findViewById(R.id.download_from_server).setOnClickListener(v ->{
+            //不能向浏览器一样直接访问地址下载文件的
+//            mPresenter.getDownloadDataRequest();
+            //调用库进行下载
+                    FileDownloader.getImpl().create("http://192.168.199.163:8080/user/download").setWifiRequired(true).setPath(storageFile.toString()+File.separator+"android.apk").setListener(new FileDownloadListener() {
+                        @Override
+                        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+                        }
+
+                        @Override
+                        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        }
+
+                        @Override
+                        protected void blockComplete(BaseDownloadTask task) {
+
+                        }
+
+                        @Override
+                        protected void completed(BaseDownloadTask task) {
+                            Toast.makeText(MainActivity.this,"下载完成!",Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+                        }
+
+                        @Override
+                        protected void error(BaseDownloadTask task, Throwable e) {
+
+                        }
+
+                        @Override
+                        protected void warn(BaseDownloadTask task) {
+                            continueDownLoad(task);//如果存在了相同的任务，那么就继续下载
+                        }
+                    }).start();
+        }
+        );
+
+        upload.setOnClickListener(v -> {
+            File[] files = storageFile.listFiles();
+            if (files.length==0) {
+                ToastUtil.showShort("对应的视频文件夹下为空");
+                return;
+            }
+
+            MultipartBody.Part[] images = new MultipartBody.Part[1];
+            images[0] = getSpecialBodyTypePic("video.mp4");//注意文件的扩展名是不是需要声明
+
+            for (File file : files) {
+                if (file.getName().equals("video.mp4")) {
+                    mPresenter.getUploadDataRequest("1",images);
+                }
+            }
+        });
+    }
+
+    private MultipartBody.Part getSpecialBodyTypePic(String filename) {
+        File f = new File(PATH + File.separator + "testVideo" + File.separator + "video.mp4");
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), f);//创建RequestBody，其中`multipart/form-data`为编码类型
+        return MultipartBody.Part.createFormData("file", filename, requestFile);
     }
 
     // https://www.jianshu.com/p/601086916c8f
@@ -314,6 +388,17 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
             LogUtils.loge("indexOutOfBoundsException----没有获取到视频");
         }
 
+    }
+
+    //视频上传成功返回
+    @Override
+    public void returnUploadData(HttpResponse httpResponse) {
+        ToastUtil.showShort(httpResponse.getMessage());
+    }
+
+    @Override
+    public void returnDownloadData(HttpResponse httpResponse) {
+        ToastUtil.showShort("下载好了");
     }
 
     @Override

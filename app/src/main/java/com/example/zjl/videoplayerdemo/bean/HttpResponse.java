@@ -7,7 +7,7 @@ package com.example.zjl.videoplayerdemo.bean;
 
 public class HttpResponse<T> {
     private int status;
-    private String msg;
+    private String message;
     private T data;
     private boolean success;
 
@@ -15,8 +15,8 @@ public class HttpResponse<T> {
         return status;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
     public T getData() {
@@ -35,8 +35,8 @@ public class HttpResponse<T> {
         this.status = status;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setData(T data) {

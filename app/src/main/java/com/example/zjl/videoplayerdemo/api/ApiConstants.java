@@ -21,6 +21,7 @@ public class ApiConstants {
 //    public static final String QUALITY_HOST = "https://www.npclo.com/";
     public static final String QUALITY_HOST = "https://test.npclo.com/";
     public static final String NETEAST_HOST = "http://c.m.163.com/";
+    public static final String BOOT_HOST = "http://192.168.199.163:8080/";
 
     /**
      * 获取对应的host
@@ -39,6 +40,9 @@ public class ApiConstants {
                 break;
             case HostType.NETEASE_NEWS_VIDEO:
                 host = NETEAST_HOST;
+                break;
+            case HostType.BOOT_DATA:
+                host = BOOT_HOST;
                 break;
             default:
                 host = "";

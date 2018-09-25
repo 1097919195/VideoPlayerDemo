@@ -1,6 +1,7 @@
 package com.example.zjl.videoplayerdemo.activity;
 
 import android.Manifest;
+import android.app.Application;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.method.HideReturnsTransformationMethod;
@@ -157,7 +158,8 @@ public class AccountActivity extends BaseActivity<LoginPresenter, LoginModel> im
 
     @Override
     public void returnGetToken(Person person) {
-        if (person.getStatus()==200) {
+        if (person != null) {
+            SPUtils.setSharedStringData(AppApplication.getAppContext(),AppConstant.LOGIN_TOKEN,person.getLoginToken());
             ToastUtil.showShort("登录成功！");
             dbHelper = new PersonDBHelper(this);
             dbOperator = new DBOperator(this);
@@ -165,20 +167,19 @@ public class AccountActivity extends BaseActivity<LoginPresenter, LoginModel> im
             //first
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             String Query = "Select * from person where id =?";
-            Cursor cursor = db.rawQuery(Query,new String[]{"1097919195"});
-            if(cursor.getCount()>0)
-            {
+            Cursor cursor = db.rawQuery(Query, new String[]{"1097919195"});
+            if (cursor.getCount() > 0) {
                 cursor.close();
-                LogUtils.loge("该用户已经插入到数据表了"+cursor.getCount());
-            }else {
+                LogUtils.loge("该用户已经插入到数据表了" + cursor.getCount());
+            } else {
                 cursor.close();
             }
 
             //second
             List<Person> peopleList = dbOperator.select("1097919195");
             if (peopleList != null && peopleList.size() > 0) {
-                LogUtils.loge("该用户已经插入到数据表"+peopleList.size());
-            }else {
+                LogUtils.loge("该用户已经插入到数据表" + peopleList.size());
+            } else {
                 dbOperator.insert(person);
             }
 
