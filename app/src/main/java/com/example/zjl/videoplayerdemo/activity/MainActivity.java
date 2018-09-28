@@ -318,7 +318,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         //下载的图片测试地址 http://cdn.llsapp.com/crm_test_1449051526097.jpg
         //下载的视频测试地址 http://flv3.bn.netease.com/tvmrepo/2018/6/H/9/EDJTRBEH9/SD/EDJTRBEH9-mobile.mp4
         FileDownloader.getImpl()
-                .create("http://flv3.bn.netease.com/tvmrepo/2018/6/H/9/EDJTRBEH9/SD/EDJTRBEH9-mobile.mp4")
+                .create("http://flv3.bn.netease.com/tvmrepo/2018/6/H/9/EDJTRBEH9/SD/EDJTRBEH9-mobile.mp4")//下载apk需要服务端支持，避免解析失败
                 .setPath(outputImage.toString())
                 .setListener(new FileDownloadListener() {
                     @Override
