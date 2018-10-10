@@ -9,5 +9,5 @@ import com.jaydenxiao.common.base.BaseView;
 
 public interface MVCOnWeatherListener extends BaseView {
     void returnWeatherDataSucceed(WeatherData weatherData);
-    void returnWeatherDataError(String message);
+    void returnWeatherDataError(String message);//其实可以直接使用BaseView中的showErrorTip统一封装
 }
