@@ -53,6 +53,8 @@ import java.util.List;
 import butterknife.BindView;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -153,6 +155,8 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
     //天气
     MVCWeatherModel weatherModel = new MVCWeatherModelImpl();
+    /*管理Observables 和 Subscribers订阅,防止内存泄漏*/
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public static void startAction(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
@@ -285,7 +289,8 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         });
 
         findViewById(R.id.weatherBtn).setOnClickListener(v -> {
-            weatherModel.getWeatherInfo(this);
+            Disposable disposable = weatherModel.getWeatherInfo(this);
+            mCompositeDisposable.add(disposable);//再界面销毁的时候取消订阅
         });
     }
 
@@ -437,5 +442,11 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     @Override
     public void returnWeatherDataError(String meassage) {
         LogUtils.loge(meassage);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
     }
 }

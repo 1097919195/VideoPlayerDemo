@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable;
 
 public class MVCWeatherModelImpl implements MVCWeatherModel{
 
+    //disposable便是这个订阅事件
     @Override
     public Disposable getWeatherInfo(MVCOnWeatherListener listener) {
         return Api.getDefault(HostType.WEATHER_DATA)
