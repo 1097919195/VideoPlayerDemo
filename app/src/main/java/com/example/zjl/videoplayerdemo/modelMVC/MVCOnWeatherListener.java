@@ -7,6 +7,7 @@ import com.example.zjl.videoplayerdemo.bean.WeatherData;
  */
 
 public interface MVCOnWeatherListener {
+    void showLoading(String title);
     void returnWeatherDataSucceed(WeatherData weatherData);
     void returnWeatherDataError(String message);
 }

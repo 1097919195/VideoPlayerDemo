@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.zjl.videoplayerdemo.ICallback;
@@ -157,6 +158,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     MVCWeatherModel weatherModel = new MVCWeatherModelImpl();
     /*管理Observables 和 Subscribers订阅,防止内存泄漏*/
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private MaterialDialog circleProgressBar;
 
     public static void startAction(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
@@ -180,6 +182,15 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         initFileStore();
         initListener();
         initAIDL();
+        initCircleProgressBar();
+    }
+
+    private void initCircleProgressBar() {
+        circleProgressBar = new MaterialDialog.Builder(this)
+                .progress(true, 100)
+                .content("加载中...")
+                .backgroundColor(getResources().getColor(R.color.white))
+                .build();
     }
 
     //接受返回过来的实体类即实现通用需要向连接绑定服务
@@ -289,6 +300,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         });
 
         findViewById(R.id.weatherBtn).setOnClickListener(v -> {
+//            weatherModel.getWeatherInfo(this);
             Disposable disposable = weatherModel.getWeatherInfo(this);
             mCompositeDisposable.add(disposable);//再界面销毁的时候取消订阅
         });
@@ -420,7 +432,9 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
     @Override
     public void showLoading(String title) {
-
+        if (title=="circleProgressBar") {
+            circleProgressBar.show();
+        }
     }
 
     @Override
@@ -437,11 +451,13 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     @Override
     public void returnWeatherDataSucceed(WeatherData weatherData) {
         LogUtils.loge(new Gson().toJson(weatherData));
+        circleProgressBar.dismiss();
     }
 
     @Override
     public void returnWeatherDataError(String meassage) {
         LogUtils.loge(meassage);
+        circleProgressBar.dismiss();
     }
 
     @Override
