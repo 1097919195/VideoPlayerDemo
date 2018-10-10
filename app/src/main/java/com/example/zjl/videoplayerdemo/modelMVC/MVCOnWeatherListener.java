@@ -1,13 +1,13 @@
 package com.example.zjl.videoplayerdemo.modelMVC;
 
 import com.example.zjl.videoplayerdemo.bean.WeatherData;
+import com.jaydenxiao.common.base.BaseView;
 
 /**
  * Created by Administrator on 2018/10/10 0010.
  */
 
-public interface MVCOnWeatherListener {
-    void showLoading(String title);
+public interface MVCOnWeatherListener extends BaseView {
     void returnWeatherDataSucceed(WeatherData weatherData);
     void returnWeatherDataError(String message);
 }
