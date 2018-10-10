@@ -8,6 +8,7 @@ import com.example.zjl.videoplayerdemo.bean.LoginTokenData;
 import com.example.zjl.videoplayerdemo.bean.Person;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
+import com.example.zjl.videoplayerdemo.bean.WeatherData;
 
 import java.util.List;
 import java.util.Map;
@@ -158,6 +159,13 @@ public interface ApiService {
     //下载
     @GET("user/download")
     Observable<HttpResponse> download(
+    );
+
+    //下载
+    @GET("v3/weather/now.json")
+    Observable<WeatherData> getWeather(
+            @Query("key") String key,
+            @Query("location") String location
     );
 
 }

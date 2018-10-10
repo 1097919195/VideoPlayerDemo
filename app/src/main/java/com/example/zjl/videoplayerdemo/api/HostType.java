@@ -21,7 +21,7 @@ public class HostType {
     /**
      * 多少种Host类型
      */
-    public static final int TYPE_COUNT = 4;
+    public static final int TYPE_COUNT = 5;
 
     /**
      *质检系统测试
@@ -42,4 +42,9 @@ public class HostType {
      * 我的springboot
      */
     public static final int BOOT_DATA = 4;
+
+    /**
+     * 知心天气
+     */
+    public static final int WEATHER_DATA = 5;
 }

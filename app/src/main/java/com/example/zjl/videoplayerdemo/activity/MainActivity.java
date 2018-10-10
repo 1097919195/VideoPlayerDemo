@@ -27,10 +27,15 @@ import com.example.zjl.videoplayerdemo.bean.Entity;
 import com.example.zjl.videoplayerdemo.bean.HttpResponse;
 import com.example.zjl.videoplayerdemo.bean.TestBean;
 import com.example.zjl.videoplayerdemo.bean.VideoData;
+import com.example.zjl.videoplayerdemo.bean.WeatherData;
 import com.example.zjl.videoplayerdemo.contract.VideoContract;
 import com.example.zjl.videoplayerdemo.model.VideoModel;
+import com.example.zjl.videoplayerdemo.modelMVC.MVCOnWeatherListener;
+import com.example.zjl.videoplayerdemo.modelMVC.MVCWeatherModel;
+import com.example.zjl.videoplayerdemo.modelMVC.MVCWeatherModelImpl;
 import com.example.zjl.videoplayerdemo.presenter.VideoPresenter;
 import com.example.zjl.videoplayerdemo.service.MyService;
+import com.google.gson.Gson;
 import com.jaydenxiao.common.base.BaseActivity;
 import com.jaydenxiao.common.base.BaseModel;
 import com.jaydenxiao.common.base.BasePresenter;
@@ -55,7 +60,7 @@ import okhttp3.RequestBody;
 import android.net.Uri;
 import android.widget.Toast;
 
-public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> implements VideoContract.View {
+public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> implements VideoContract.View, MVCOnWeatherListener {
 
     @BindView(R.id.text)
     TextView text;
@@ -146,6 +151,9 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
         }
     };
 
+    //天气
+    MVCWeatherModel weatherModel = new MVCWeatherModelImpl();
+
     public static void startAction(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
         activity.startActivity(intent);
@@ -197,7 +205,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
         deleteVideo.setOnClickListener(v -> {
             File[] files = storageFile.listFiles();
-            if (files.length==0) {
+            if (files.length == 0) {
                 ToastUtil.showShort("对应的视频文件夹下为空");
                 return;
             }
@@ -217,11 +225,11 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
             startDownLoad();
         });
 
-        findViewById(R.id.download_from_server).setOnClickListener(v ->{
-            //不能向浏览器一样直接访问地址下载文件的
+        findViewById(R.id.download_from_server).setOnClickListener(v -> {
+                    //不能向浏览器一样直接访问地址下载文件的
 //            mPresenter.getDownloadDataRequest();
-            //调用库进行下载
-                    FileDownloader.getImpl().create("http://192.168.199.163:8080/user/download").setWifiRequired(true).setPath(storageFile.toString()+File.separator+"android.apk").setListener(new FileDownloadListener() {
+                    //调用库进行下载
+                    FileDownloader.getImpl().create("http://192.168.199.163:8080/user/download").setWifiRequired(true).setPath(storageFile.toString() + File.separator + "android.apk").setListener(new FileDownloadListener() {
                         @Override
                         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
 
@@ -238,7 +246,7 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
                         @Override
                         protected void completed(BaseDownloadTask task) {
-                            Toast.makeText(MainActivity.this,"下载完成!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "下载完成!", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -256,12 +264,12 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
                             continueDownLoad(task);//如果存在了相同的任务，那么就继续下载
                         }
                     }).start();
-        }
+                }
         );
 
         upload.setOnClickListener(v -> {
             File[] files = storageFile.listFiles();
-            if (files.length==0) {
+            if (files.length == 0) {
                 ToastUtil.showShort("对应的视频文件夹下为空");
                 return;
             }
@@ -271,9 +279,13 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
 
             for (File file : files) {
                 if (file.getName().equals("video.mp4")) {
-                    mPresenter.getUploadDataRequest("1",images);
+                    mPresenter.getUploadDataRequest("1", images);
                 }
             }
+        });
+
+        findViewById(R.id.weatherBtn).setOnClickListener(v -> {
+            weatherModel.getWeatherInfo(this);
         });
     }
 
@@ -414,5 +426,16 @@ public class MainActivity extends BaseActivity<VideoPresenter, VideoModel> imple
     @Override
     public void showErrorTip(String msg) {
         ToastUtil.showShort(msg);
+    }
+
+    //MVC返回的WeatherData
+    @Override
+    public void returnWeatherDataSucceed(WeatherData weatherData) {
+        LogUtils.loge(new Gson().toJson(weatherData));
+    }
+
+    @Override
+    public void returnWeatherDataError(String meassage) {
+        LogUtils.loge(meassage);
     }
 }

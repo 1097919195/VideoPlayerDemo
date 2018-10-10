@@ -54,6 +54,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="下载我的服务器中的文件"/>
+        <Button
+            android:id="@+id/weatherBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MVC模式获取天气"/>
     </LinearLayout>
 
 

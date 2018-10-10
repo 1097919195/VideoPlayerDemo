@@ -22,6 +22,7 @@ public class ApiConstants {
     public static final String QUALITY_HOST = "https://test.npclo.com/";
     public static final String NETEAST_HOST = "http://c.m.163.com/";
     public static final String BOOT_HOST = "http://192.168.199.163:8080/";
+    public static final String WEATHER_HOST = "https://api.seniverse.com/";
 
     /**
      * 获取对应的host
@@ -43,6 +44,9 @@ public class ApiConstants {
                 break;
             case HostType.BOOT_DATA:
                 host = BOOT_HOST;
+                break;
+            case HostType.WEATHER_DATA:
+                host = WEATHER_HOST;
                 break;
             default:
                 host = "";
