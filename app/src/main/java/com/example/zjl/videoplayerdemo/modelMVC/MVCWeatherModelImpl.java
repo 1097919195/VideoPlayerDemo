@@ -10,6 +10,7 @@ import io.reactivex.disposables.Disposable;
  * Created by Administrator on 2018/10/9 0009.
  */
 
+//Activity就是controller层
 public class MVCWeatherModelImpl implements MVCWeatherModel{
 
     //disposable便是这个订阅事件  返回该对象可以再销毁界面时取消订阅
