@@ -61,4 +61,7 @@ dependencies {
 
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
+    //自己的项目测试
+//    implementation 'com.github.1097919195:GitWithDemo:2.0'
 }
